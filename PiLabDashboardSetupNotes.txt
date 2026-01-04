@@ -1,0 +1,43 @@
+Pi Lab Dashboard — Setup Notes
+
+What's already done
+
+Repo: josephmlev/eedmLabDashboard
+GitHub Pages live at: https://josephmlev.github.io/eedmLabDashboard/
+index.html with Plotly.js pulls from data.json and renders plots
+data.json stores your readings (keep last 2000 points)
+Push script tested and working from home
+
+On the Pi
+
+GITHUB_TOKEN=github_pat_your_actual_token_here
+Token is saved on JML's macbook, but should be kept out of git history!
+
+Copy over your push script (pushFakeDataTest.py or rename it)
+
+Replace fake readings with real sensor calls:
+data.append({
+'time': datetime.now().isoformat(),
+'temp': read_temperature(),
+'pressure': read_pressure(),
+'v0': read_voltage_ch0(),
+'v1': read_voltage_ch1()
+})
+
+Run on a loop or cron job:
+
+Option A — loop in script:
+while True:
+# ... push reading ...
+time.sleep(60)  # every 60 seconds
+
+Option B — cron (runs every 5 min):
+crontab -e
+Add:
+*/5 * * * * cd /home/pi/lab-dashboard && /usr/bin/python3 push_script.py
+
+If something breaks
+
+401 error: Token expired or wrong — regenerate at github.com → Settings → Developer settings → Personal access tokens
+409 error: SHA mismatch — script tried to update stale data; just retry
+Page not updating: Check Actions tab for build errors; hard refresh browser (Cmd+Shift+R)

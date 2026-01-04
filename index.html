@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: sans-serif; max-width: 1200px; margin: auto; }
+        .plot { height: 300px; }
+    </style>
+</head>
+<body>
+    <h1>Lab Monitor</h1>
+    <p>Last updated: <span id="updated"></span></p>
+    <div id="temp-plot" class="plot"></div>
+    <div id="pressure-plot" class="plot"></div>
+    <div id="voltage-plot" class="plot"></div>
+    
+    <script>
+        async function loadData() {
+            const r = await fetch('data.json?' + Date.now());  // cache bust
+            const data = await r.json();
+            
+            const t = data.map(d => d.time);
+            document.getElementById('updated').textContent = t[t.length-1];
+            
+            Plotly.newPlot('temp-plot', 
+                [{x: t, y: data.map(d => d.temp), name: 'Temp'}],
+                {title: 'Temperature', xaxis: {title: 'Time'}});
+            
+            Plotly.newPlot('pressure-plot',
+                [{x: t, y: data.map(d => d.pressure), name: 'Pressure'}],
+                {title: 'Pressure', xaxis: {title: 'Time'}});
+            
+            Plotly.newPlot('voltage-plot', [
+                {x: t, y: data.map(d => d.v0), name: 'CH0'},
+                {x: t, y: data.map(d => d.v1), name: 'CH1'}
+            ], {title: 'Voltages', xaxis: {title: 'Time'}});
+        }
+        
+        loadData();
+        setInterval(loadData, 60000);
+    </script>
+</body>
+</html>

@@ -5,8 +5,9 @@ from datetime import datetime
 import random
 import time
 import os
+import git_token as gt
 
-GITHUB_TOKEN = "token here!!!"
+GITHUB_TOKEN = gt.token
 
 REPO = 'josephmlev/eedmLabDashboard'
 FILE_PATH = 'data.json'

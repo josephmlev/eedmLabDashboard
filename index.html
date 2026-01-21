@@ -28,8 +28,6 @@
         const legendSize = 14;
         // ====================================
 
-        const plotIds = ['ig-pressure-plot', 'temp-humidity-plot', 'pressure-plot', 'mag-plot', 'gas-plot'];
-
         const defaultLayout = {
             font: { size: tickSize },
             title: { font: { size: titleSize } },
@@ -38,30 +36,6 @@
             yaxis: { titlefont: { size: axisLabelSize }, tickfont: { size: tickSize } },
             yaxis2: { titlefont: { size: axisLabelSize }, tickfont: { size: tickSize } }
         };
-
-        function syncXAxes() {
-            plotIds.forEach(id => {
-                document.getElementById(id).on('plotly_relayout', function(eventData) {
-                    if (eventData['xaxis.range[0]'] && eventData['xaxis.range[1]']) {
-                        plotIds.forEach(otherId => {
-                            if (otherId !== id) {
-                                Plotly.relayout(otherId, {
-                                    'xaxis.range[0]': eventData['xaxis.range[0]'],
-                                    'xaxis.range[1]': eventData['xaxis.range[1]']
-                                });
-                            }
-                        });
-                    }
-                    if (eventData['xaxis.autorange']) {
-                        plotIds.forEach(otherId => {
-                            if (otherId !== id) {
-                                Plotly.relayout(otherId, {'xaxis.autorange': true});
-                            }
-                        });
-                    }
-                });
-            });
-        }
 
         async function loadData() {
             const r = await fetch('data.json?' + Date.now());
@@ -114,8 +88,6 @@
                 title: { text: 'MOX Sensor Resistance (rough measure of VOCs, probably ignore this plot)', font: { size: titleSize } },
                 yaxis: { ...defaultLayout.yaxis, title: 'Ohms' }
             });
-
-            syncXAxes();
         }
         
         loadData();

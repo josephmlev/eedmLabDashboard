@@ -28,6 +28,14 @@
             const t = data.map(d => d.time);
             document.getElementById('updated').textContent = 'Last updated: ' + t[t.length-1];
             
+            Plotly.newPlot('ig-pressure-plot', [
+                {x: t, y: data.map(d => d.igPressure), name: 'IG Pressure'}
+            ], {
+                title: 'Ion Gauge Pressure',
+                yaxis: {title: 'Torr', type: 'log', exponentformat: 'e'}
+            });
+            
+            
             Plotly.newPlot('temp-humidity-plot', [
                 {x: t, y: data.map(d => d.temp), name: 'Temperature (C)', yaxis: 'y1'},
                 {x: t, y: data.map(d => d.humidity), name: 'Humidity (%)', yaxis: 'y2'}
@@ -36,21 +44,7 @@
                 yaxis: {title: 'Temperature (C)'},
                 yaxis2: {title: 'Humidity (%)', overlaying: 'y', side: 'right'}
             });
-            
-            Plotly.newPlot('pressure-plot', [
-                {x: t, y: data.map(d => d.ambientPressure), name: 'Ambient Pressure'}
-            ], {
-                title: 'Ambient Pressure',
-                yaxis: {title: 'hPa'}
-            });
-            
-            Plotly.newPlot('ig-pressure-plot', [
-                {x: t, y: data.map(d => d.igPressure), name: 'IG Pressure'}
-            ], {
-                title: 'Ion Gauge Pressure',
-                yaxis: {title: 'Torr', type: 'log', exponentformat: 'e'}
-            });
-            
+
             Plotly.newPlot('mag-plot', [
                 {x: t, y: data.map(d => d.magX), name: 'X'},
                 {x: t, y: data.map(d => d.magY), name: 'Y'},
@@ -59,6 +53,13 @@
             ], {
                 title: 'Magnetic Field (sensor is currently in rack in random orientation)',
                 yaxis: {title: 'uT'}
+            });
+            
+            Plotly.newPlot('pressure-plot', [
+                {x: t, y: data.map(d => d.ambientPressure), name: 'Ambient Pressure'}
+            ], {
+                title: 'Ambient Pressure',
+                yaxis: {title: 'hPa'}
             });
             
             Plotly.newPlot('gas-plot', [

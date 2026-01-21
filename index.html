@@ -54,7 +54,8 @@
             Plotly.newPlot('mag-plot', [
                 {x: t, y: data.map(d => d.magX), name: 'X'},
                 {x: t, y: data.map(d => d.magY), name: 'Y'},
-                {x: t, y: data.map(d => d.magZ), name: 'Z'}
+                {x: t, y: data.map(d => d.magZ), name: 'Z'},
+                {x: t, y: data.map(d => Math.sqrt(d.magX*d.magX + d.magY*d.magY + d.magZ*d.magZ)), name: 'Magnitude'}
             ], {
                 title: 'Magnetic Field',
                 yaxis: {title: 'uT'}
@@ -63,7 +64,7 @@
             Plotly.newPlot('gas-plot', [
                 {x: t, y: data.map(d => d.gas), name: 'Gas Resistance'}
             ], {
-                title: 'Gas Resistance (Air Quality)',
+                title: 'MOX Sensor Resistance (rough measure of VOCs, probably ignore this plot)',
                 yaxis: {title: 'Ohms'}
             });
         }

@@ -21,6 +21,22 @@
     <div id="gas-plot" class="plot"></div>
     
     <script>
+        // ===== FONT CONFIG (edit these) =====
+        const titleSize = 20;
+        const axisLabelSize = 16;
+        const tickSize = 13;
+        const legendSize = 13;
+        // ====================================
+
+        const defaultLayout = {
+            font: { size: tickSize },
+            title: { font: { size: titleSize } },
+            legend: { font: { size: legendSize } },
+            xaxis: { titlefont: { size: axisLabelSize }, tickfont: { size: tickSize } },
+            yaxis: { titlefont: { size: axisLabelSize }, tickfont: { size: tickSize } },
+            yaxis2: { titlefont: { size: axisLabelSize }, tickfont: { size: tickSize } }
+        };
+
         async function loadData() {
             const r = await fetch('data.json?' + Date.now());
             const data = await r.json();
@@ -31,18 +47,19 @@
             Plotly.newPlot('ig-pressure-plot', [
                 {x: t, y: data.map(d => d.igPressure), name: 'IG Pressure'}
             ], {
-                title: 'Ion Gauge Pressure',
-                yaxis: {title: 'Torr', type: 'log', exponentformat: 'e'}
+                ...defaultLayout,
+                title: { text: 'Ion Gauge Pressure', font: { size: titleSize } },
+                yaxis: { ...defaultLayout.yaxis, title: 'Torr', type: 'log', exponentformat: 'e' }
             });
-            
             
             Plotly.newPlot('temp-humidity-plot', [
                 {x: t, y: data.map(d => d.temp), name: 'Temperature (C)', yaxis: 'y1'},
                 {x: t, y: data.map(d => d.humidity), name: 'Humidity (%)', yaxis: 'y2'}
             ], {
-                title: 'Temperature & Humidity',
-                yaxis: {title: 'Temperature (C)'},
-                yaxis2: {title: 'Humidity (%)', overlaying: 'y', side: 'right'}
+                ...defaultLayout,
+                title: { text: 'Temperature & Humidity', font: { size: titleSize } },
+                yaxis: { ...defaultLayout.yaxis, title: 'Temperature (C)' },
+                yaxis2: { ...defaultLayout.yaxis2, title: 'Humidity (%)', overlaying: 'y', side: 'right' }
             });
 
             Plotly.newPlot('mag-plot', [
@@ -51,22 +68,25 @@
                 {x: t, y: data.map(d => d.magZ), name: 'Z'},
                 {x: t, y: data.map(d => Math.sqrt(d.magX*d.magX + d.magY*d.magY + d.magZ*d.magZ)), name: 'Magnitude'}
             ], {
-                title: 'Magnetic Field (sensor is currently in rack in random orientation)',
-                yaxis: {title: 'uT'}
+                ...defaultLayout,
+                title: { text: 'Magnetic Field (sensor is currently in rack in random orientation)', font: { size: titleSize } },
+                yaxis: { ...defaultLayout.yaxis, title: 'uT' }
             });
             
             Plotly.newPlot('pressure-plot', [
                 {x: t, y: data.map(d => d.ambientPressure), name: 'Ambient Pressure'}
             ], {
-                title: 'Ambient Pressure',
-                yaxis: {title: 'hPa'}
+                ...defaultLayout,
+                title: { text: 'Ambient Pressure', font: { size: titleSize } },
+                yaxis: { ...defaultLayout.yaxis, title: 'hPa' }
             });
             
             Plotly.newPlot('gas-plot', [
                 {x: t, y: data.map(d => d.gas), name: 'Gas Resistance'}
             ], {
-                title: 'MOX Sensor Resistance (rough measure of VOCs, probably ignore this plot)',
-                yaxis: {title: 'Ohms'}
+                ...defaultLayout,
+                title: { text: 'MOX Sensor Resistance (rough measure of VOCs, probably ignore this plot)', font: { size: titleSize } },
+                yaxis: { ...defaultLayout.yaxis, title: 'Ohms' }
             });
         }
         

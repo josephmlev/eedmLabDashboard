@@ -48,7 +48,7 @@
                 {x: t, y: data.map(d => d.igPressure), name: 'IG Pressure'}
             ], {
                 title: 'Ion Gauge Pressure',
-                yaxis: {title: 'Torr', type: 'log'}
+                yaxis: {title: 'Torr', type: 'log', exponentformat: 'e'}
             });
             
             Plotly.newPlot('mag-plot', [
@@ -57,7 +57,7 @@
                 {x: t, y: data.map(d => d.magZ), name: 'Z'},
                 {x: t, y: data.map(d => Math.sqrt(d.magX*d.magX + d.magY*d.magY + d.magZ*d.magZ)), name: 'Magnitude'}
             ], {
-                title: 'Magnetic Field',
+                title: 'Magnetic Field (sensor is currently in rack in random orientation)',
                 yaxis: {title: 'uT'}
             });
             

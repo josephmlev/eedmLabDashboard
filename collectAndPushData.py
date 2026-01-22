@@ -57,16 +57,16 @@ if __name__ == '__main__':
     chan = AnalogIn(ads, ads1x15.Pin.A0)
     igPressure = 10**((chan.voltage*4)-11)
     
-    data.append({
-        'time': datetime.now().isoformat(),
-        'temp': bme.temperature,
-        'humidity': bme.relative_humidity,
-        'ambientPressure': bme.pressure,
-        'gas': bme.gas,
-        'magX': x,
-        'magY': y,
-        'magZ': z,
-        'igPressure': igPressure
+data.append({
+        'time': datetime.now().isoformat(timespec='seconds'),
+        'temp': round(bme.temperature, 1),
+        'humidity': round(bme.relative_humidity, 2),
+        'ambientPressure': round(bme.pressure, 1),
+        'gas': round(bme.gas, 1),
+        'magX': round(x, 3),
+        'magY': round(y, 3),
+        'magZ': round(z, 3),
+        'igPressure': round(igPressure, 3)
     })
     
     

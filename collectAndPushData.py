@@ -57,17 +57,17 @@ if __name__ == '__main__':
     chan = AnalogIn(ads, ads1x15.Pin.A0)
     igPressure = 10**((chan.voltage*4)-11)
     
-data.append({
-        'time': datetime.now().isoformat(timespec='seconds'),
-        'temp': round(bme.temperature, 1),
-        'humidity': round(bme.relative_humidity, 2),
-        'ambientPressure': round(bme.pressure, 1),
-        'gas': round(bme.gas, 1),
-        'magX': round(x, 3),
-        'magY': round(y, 3),
-        'magZ': round(z, 3),
-        'igPressure': round(igPressure, 3)
-    })
+    data.append({
+            'time': datetime.now().isoformat(timespec='seconds'),
+            'temp': round(bme.temperature, 1),
+            'humidity': round(bme.relative_humidity, 2),
+            'ambientPressure': round(bme.pressure, 1),
+            'gas': round(bme.gas, 1),
+            'magX': round(x, 3),
+            'magY': round(y, 3),
+            'magZ': round(z, 3),
+            'igPressure': float(f'{igPressure:.4g}') #a little tricky way to round
+        })
     
     
     data = data[-20000:]  # keep last 20000 points

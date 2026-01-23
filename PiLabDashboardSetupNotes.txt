@@ -1,40 +1,48 @@
 Pi Lab Dashboard — Setup Notes
 
-What's already done
-
 Repo: josephmlev/eedmLabDashboard
 GitHub Pages live at: https://josephmlev.github.io/eedmLabDashboard/
 index.html with Plotly.js pulls from data.json and renders plots
-data.json stores your readings (keep last 2000 points)
-Push script tested and working from home
+data.json stores your readings (keep last 20000 points)
 
 On the Pi
 
 GITHUB_TOKEN=github_pat_your_actual_token_here
-Token is saved on JML's macbook, but should be kept out of git history!
+Token is saved on JML's macbook, in emails with chris and on the Pi, but should be kept out of git history!
 
-Copy over your push script (pushFakeDataTest.py or rename it)
 
-Replace fake readings with real sensor calls:
-data.append({
-'time': datetime.now().isoformat(),
-'temp': read_temperature(),
-'pressure': read_pressure(),
-'v0': read_voltage_ch0(),
-'v1': read_voltage_ch1()
-})
+SSH ACCESS
+----------
+From LBL visitor network:
+  ssh eedm@198.128.196.90
 
-Run on a loop or cron job:
+VIRTUAL ENVIRONMENT
+-------------------
+Created at ~/sensor-env. Auto-activates on login via ~/.bashrc.
 
-Option A — loop in script:
-while True:
-# ... push reading ...
-time.sleep(60)  # every 60 seconds
+To manually activate:
+  source ~/sensor-env/bin/activate
 
-Option B — cron (runs every 5 min):
-crontab -e
-Add:
-*/5 * * * * cd /home/pi/lab-dashboard && /usr/bin/python3 push_script.py
+Installed libraries:
+  pip install requests python-dotenv adafruit-circuitpython-bme680 adafruit-circuitpython-ads1x15 adafruit-circuitpython-mmc56x3
+
+
+CRON JOB
+--------
+Runs collectAndPushData.py every 10 minutes.
+
+View cron jobs:
+  crontab -l
+
+Edit cron jobs:
+  crontab -e
+
+Current entry:
+  */10 * * * * cd /home/eedm/eedmLabDashboard && /home/eedm/sensor-env/bin/python collectAndPushData.py >> /home/eedm/cron.log 2>&1
+
+Check recent output:
+  tail ~/cron.log
+
 
 If something breaks
 

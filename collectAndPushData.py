@@ -12,13 +12,22 @@ import busio
 import adafruit_bme680
 import adafruit_mmc56x3
 from adafruit_ads1x15 import ADS1115, AnalogIn, ads1x15
+import tldevice
 
 i2c = busio.I2C(board.SCL, board.SDA)
-
+#i2c devices
 bme = adafruit_bme680.Adafruit_BME680_I2C(i2c)
-mag = adafruit_mmc56x3.MMC5603(i2c)
+#mag = adafruit_mmc56x3.MMC5603(i2c)
 ads = ADS1115(i2c)
 
+twinleafFlag = 1 # 1 means use twinleaf
+
+#twinleaf magetometer or adafruit
+if twinleafFlag:
+    mag = tldevice.Device('/dev/ttyUSB0')
+    row = next(mag.data.iter())
+else:
+    mag = adafruit_mmc56x3.MMC5603(i2c)
 
 GITHUB_TOKEN = gt.token
 
@@ -52,8 +61,10 @@ def push_data(data, sha):
 
 if __name__ == '__main__':
     data, sha = get_file()
-
-    x, y, z = mag.magnetic
+    if twinleafFlag:
+        x, y, z = row[0]/1000, row[1]/1000, row[2]/1000 #convert to uT
+    else:
+        x, y, z = mag.magnetic
     chan = AnalogIn(ads, ads1x15.Pin.A0)
     igPressure = 10**((chan.voltage*4)-11)
     

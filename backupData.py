@@ -3,7 +3,7 @@ import subprocess
 from datetime import datetime
 
 date_str = datetime.now().strftime('%Y-%m-%d')
-filename = f'backups/data_{date_str}5.json'
+filename = f'backups/data_{date_str}.json'
 shutil.copy('data.json', filename)
 
 subprocess.run(['git', 'add', filename])

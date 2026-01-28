@@ -8,10 +8,18 @@
         h1 { text-align: center; }
         .plot { height: 600px; margin-bottom: 20px; }
         #updated { text-align: center; color: #666; }
+        #controls { text-align: center; margin-bottom: 20px; }
+        #data-select { font-size: 16px; padding: 5px 10px; }
     </style>
 </head>
 <body>
     <h1>eEDM Lab Dashboard</h1>
+    <div id="controls">
+        <label for="data-select">Data source: </label>
+        <select id="data-select">
+            <option value="data.json">Current</option>
+        </select>
+    </div>
     <p id="updated">Last updated: loading...</p>
     
     <div id="ig-pressure-plot" class="plot"></div>
@@ -21,12 +29,13 @@
     <div id="gas-plot" class="plot"></div>
     
     <script>
-        // ===== FONT CONFIG (edit these) =====
+        // ===== CONFIG (edit these) =====
         const titleSize = 24;
         const axisLabelSize = 18;
         const tickSize = 14;
         const legendSize = 14;
-        // ====================================
+        const REPO = 'josephmlev/eedmLabDashboard';
+        // ================================
 
         const plotIds = ['ig-pressure-plot', 'temp-humidity-plot', 'pressure-plot', 'mag-plot', 'gas-plot'];
         let syncing = false;
@@ -34,11 +43,34 @@
         const defaultLayout = {
             font: { size: tickSize },
             title: { font: { size: titleSize } },
-            legend: { font: { size: legendSize } },
+            legend: { 
+                font: { size: legendSize },
+                x: 0.01,
+                y: 0.99,
+                xanchor: 'left',
+                yanchor: 'top',
+                bgcolor: 'rgba(255,255,255,0.8)'
+            },
             xaxis: { titlefont: { size: axisLabelSize }, tickfont: { size: tickSize } },
             yaxis: { titlefont: { size: axisLabelSize }, tickfont: { size: tickSize } },
             yaxis2: { titlefont: { size: axisLabelSize }, tickfont: { size: tickSize } }
         };
+
+        async function populateDropdown() {
+            const select = document.getElementById('data-select');
+            const r = await fetch(`https://api.github.com/repos/${REPO}/contents/backups`);
+            const files = await r.json();
+            
+            files
+                .filter(f => f.name.match(/^data_\d{4}-\d{2}-\d{2}\.json$/))
+                .sort((a, b) => b.name.localeCompare(a.name))
+                .forEach(f => {
+                    const option = document.createElement('option');
+                    option.value = 'backups/' + f.name;
+                    option.textContent = f.name.replace('data_', '').replace('.json', '');
+                    select.appendChild(option);
+                });
+        }
 
         function syncXAxes() {
             plotIds.forEach(id => {
@@ -69,8 +101,8 @@
             });
         }
 
-        async function loadData() {
-            const r = await fetch('data.json?' + Date.now());
+        async function loadData(filename = 'data.json') {
+            const r = await fetch(filename + '?' + Date.now());
             const data = await r.json();
             
             const t = data.map(d => d.time);
@@ -123,9 +155,18 @@
 
             syncXAxes();
         }
+
+        document.getElementById('data-select').addEventListener('change', function() {
+            loadData(this.value);
+        });
         
+        populateDropdown();
         loadData();
-        setInterval(loadData, 60000);
+        setInterval(() => {
+            if (document.getElementById('data-select').value === 'data.json') {
+                loadData();
+            }
+        }, 60000);
     </script>
 </body>
 </html>

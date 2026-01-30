@@ -81,7 +81,7 @@ if __name__ == '__main__':
         })
     
     
-    data = data[-20000:]  # keep last 20000 points
+    data = data[-1152:]  # keep last 20000 points
     
     status = push_data(data, sha)
     print(f'Push status: {status}')

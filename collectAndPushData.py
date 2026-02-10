@@ -17,6 +17,7 @@ import tldevice
 i2c = busio.I2C(board.SCL, board.SDA)
 #i2c devices
 bme = adafruit_bme680.Adafruit_BME680_I2C(i2c)
+bme.gas_heater_enable = False
 #mag = adafruit_mmc56x3.MMC5603(i2c)
 ads = ADS1115(i2c)
 

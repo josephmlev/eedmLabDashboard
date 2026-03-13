@@ -22,9 +22,9 @@
     </div>
     <p id="updated">Last updated: loading...</p>
     
-    <div id="temp-humidity2-plot" class="plot"></div>
     <div id="ig-pressure-plot" class="plot"></div>
     <div id="temp-humidity-plot" class="plot"></div>
+    <div id="temp-humidity2-plot" class="plot"></div>
     <div id="pressure-plot" class="plot"></div>
     <div id="mag-plot" class="plot"></div>
     <div id="gas-plot" class="plot"></div>
@@ -110,11 +110,11 @@
             document.getElementById('updated').textContent = 'Last updated: ' + t[t.length-1];
 
             Plotly.newPlot('temp-humidity2-plot', [
-                {x: t, y: data.map(d => d.temp2), name: 'Temperature 2 (C)', yaxis: 'y1'},
-                {x: t, y: data.map(d => d.humidity2), name: 'Humidity 2 (%)', yaxis: 'y2'}
+                {x: t, y: data.map(d => d.temp2), name: 'Temperature (C)', yaxis: 'y1'},
+                {x: t, y: data.map(d => d.humidity2), name: 'Humidity (%)', yaxis: 'y2'}
             ], {
                 ...defaultLayout,
-                title: { text: 'Temperature & Humidity (Sensor 2)', font: { size: titleSize } },
+                title: { text: 'Temperature & Humidity (Laser Table)', font: { size: titleSize } },
                 yaxis: { ...defaultLayout.yaxis, title: 'Temperature (C)' },
                 yaxis2: { ...defaultLayout.yaxis2, title: 'Humidity (%)', overlaying: 'y', side: 'right' }
             });
@@ -132,7 +132,7 @@
                 {x: t, y: data.map(d => d.humidity), name: 'Humidity (%)', yaxis: 'y2'}
             ], {
                 ...defaultLayout,
-                title: { text: 'Temperature & Humidity', font: { size: titleSize } },
+                title: { text: 'Temperature & Humidity (MOT Stand)', font: { size: titleSize } },
                 yaxis: { ...defaultLayout.yaxis, title: 'Temperature (C)' },
                 yaxis2: { ...defaultLayout.yaxis2, title: 'Humidity (%)', overlaying: 'y', side: 'right' }
             });

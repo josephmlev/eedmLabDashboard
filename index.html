@@ -22,6 +22,7 @@
     </div>
     <p id="updated">Last updated: loading...</p>
     
+    <div id="temp-humidity2-plot" class="plot"></div>
     <div id="ig-pressure-plot" class="plot"></div>
     <div id="temp-humidity-plot" class="plot"></div>
     <div id="pressure-plot" class="plot"></div>
@@ -37,7 +38,7 @@
         const REPO = 'josephmlev/eedmLabDashboard';
         // ================================
 
-        const plotIds = ['ig-pressure-plot', 'temp-humidity-plot', 'pressure-plot', 'mag-plot', 'gas-plot'];
+        const plotIds = ['temp-humidity2-plot', 'ig-pressure-plot', 'temp-humidity-plot', 'pressure-plot', 'mag-plot', 'gas-plot'];
         let syncing = false;
 
         const defaultLayout = {
@@ -107,6 +108,16 @@
             
             const t = data.map(d => d.time);
             document.getElementById('updated').textContent = 'Last updated: ' + t[t.length-1];
+
+            Plotly.newPlot('temp-humidity2-plot', [
+                {x: t, y: data.map(d => d.temp2), name: 'Temperature 2 (C)', yaxis: 'y1'},
+                {x: t, y: data.map(d => d.humidity2), name: 'Humidity 2 (%)', yaxis: 'y2'}
+            ], {
+                ...defaultLayout,
+                title: { text: 'Temperature & Humidity (Sensor 2)', font: { size: titleSize } },
+                yaxis: { ...defaultLayout.yaxis, title: 'Temperature (C)' },
+                yaxis2: { ...defaultLayout.yaxis2, title: 'Humidity (%)', overlaying: 'y', side: 'right' }
+            });
             
             Plotly.newPlot('ig-pressure-plot', [
                 {x: t, y: data.map(d => d.igPressure), name: 'IG Pressure'}

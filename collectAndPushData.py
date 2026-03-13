@@ -16,8 +16,10 @@ import tldevice
 
 i2c = busio.I2C(board.SCL, board.SDA)
 #i2c devices
-bme = adafruit_bme680.Adafruit_BME680_I2C(i2c)
+bme = adafruit_bme680.Adafruit_BME680_I2C(i2c) #bme 1 is by the MOT stand
 bme.gas_heater_enable = False
+bme2 = adafruit_bme680.Adafruit_BME680_I2C(i2c, address=0x76) #bme2 is mobile via ethernet cable
+bme2.gas_heater_enable = False
 #mag = adafruit_mmc56x3.MMC5603(i2c)
 ads = ADS1115(i2c)
 
@@ -69,7 +71,7 @@ if __name__ == '__main__':
     chan = AnalogIn(ads, ads1x15.Pin.A0)
     igPressure = 10**((chan.voltage*4)-11)
     
-    data.append({
+    '''data.append({
             'time': datetime.now().isoformat(timespec='seconds'),
             'temp': round(bme.temperature, 1),
             'humidity': round(bme.relative_humidity, 2),
@@ -79,7 +81,23 @@ if __name__ == '__main__':
             'magY': round(y, 3),
             'magZ': round(z, 3),
             'igPressure': float(f'{igPressure:.4g}') #a little tricky way to round
-        })
+        })'''
+
+    data.append({
+        'time': datetime.now().isoformat(timespec='seconds'),
+        'temp': round(bme.temperature, 1),
+        'humidity': round(bme.relative_humidity, 2),
+        'ambientPressure': round(bme.pressure, 1),
+        'gas': round(bme.gas, 1),
+        'temp2': round(bme2.temperature, 1), 
+        'humidity2': round(bme2.relative_humidity, 2),
+        #'ambientPressure2': round(bme2.pressure, 1),
+        #'gas2': round(bme2.gas, 1),
+        'magX': round(x, 3),
+        'magY': round(y, 3),
+        'magZ': round(z, 3),
+        'igPressure': float(f'{igPressure:.4g}')
+    })
     
     
     data = data[-1152:]  # keep last 20000 points

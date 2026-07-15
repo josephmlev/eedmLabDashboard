@@ -1,6 +1,8 @@
 # README.md
 
-This repo controlls a plotly-based dashboard for lab data for the eEDM lab at LBL. 
+This repo controls a plotly-based dashboard for lab data for the eEDM lab at LBL. 
+
+To get into the pi: ssh eedm@198.... full IP and PW hint in lab book under lab environment tab
 
 The dashboard is hosted at:
 https://josephmlev.github.io/eedmLabDashboard/

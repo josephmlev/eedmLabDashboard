@@ -26,11 +26,13 @@ ads = ADS1115(i2c)
 twinleafFlag = 1 # 1 means use twinleaf
 
 #twinleaf magetometer or adafruit
-if twinleafFlag:
-    mag = tldevice.Device('/dev/ttyUSB0')
-    row = next(mag.data.iter())
-else:
-    mag = adafruit_mmc56x3.MMC5603(i2c)
+try:
+    tl = tldevice.Device(os.path.realpath('/dev/serial/by-id/usb-FTDI_FT230X_Basic_UART_DT03Z0A5-if00-port0'))
+    row = next(tl.data.iter())
+    magXYZ = (row[0]/1000, row[1]/1000, row[2]/1000)  # nT -> uT
+except Exception as e:
+    print(f'{datetime.now().isoformat()} Twinleaf read failed: {e}')
+    magXYZ = None
 
 GITHUB_TOKEN = gt.token
 
@@ -60,47 +62,27 @@ def push_data(data, sha):
 
 
 
-
-
 if __name__ == '__main__':
     data, sha = get_file()
-    if twinleafFlag:
-        x, y, z = row[0]/1000, row[1]/1000, row[2]/1000 #convert to uT
-    else:
-        x, y, z = mag.magnetic
+
     chan = AnalogIn(ads, ads1x15.Pin.A0)
     igPressure = 10**((chan.voltage*4)-11)
-    
-    '''data.append({
-            'time': datetime.now().isoformat(timespec='seconds'),
-            'temp': round(bme.temperature, 1),
-            'humidity': round(bme.relative_humidity, 2),
-            'ambientPressure': round(bme.pressure, 1),
-            'gas': round(bme.gas, 1),
-            'magX': round(x, 3),
-            'magY': round(y, 3),
-            'magZ': round(z, 3),
-            'igPressure': float(f'{igPressure:.4g}') #a little tricky way to round
-        })'''
 
-    data.append({
+    entry = {
         'time': datetime.now().isoformat(timespec='seconds'),
         'temp': round(bme.temperature, 1),
         'humidity': round(bme.relative_humidity, 2),
         'ambientPressure': round(bme.pressure, 1),
         'gas': round(bme.gas, 1),
-        'temp2': round(bme2.temperature, 1), 
+        'temp2': round(bme2.temperature, 1),
         'humidity2': round(bme2.relative_humidity, 2),
-        #'ambientPressure2': round(bme2.pressure, 1),
-        #'gas2': round(bme2.gas, 1),
-        'magX': round(x, 3),
-        'magY': round(y, 3),
-        'magZ': round(z, 3),
-        'igPressure': float(f'{igPressure:.4g}')
-    })
-    
-    
-    data = data[-1152:]  # keep last 20000 points
-    
+        'igPressure': float(f'{igPressure:.4g}'),
+    }
+    if magXYZ:
+        entry.update(magX=round(magXYZ[0], 3), magY=round(magXYZ[1], 3), magZ=round(magXYZ[2], 3))
+
+    data.append(entry)
+    data = data[-1152:]
+
     status = push_data(data, sha)
     print(f'Push status: {status}')

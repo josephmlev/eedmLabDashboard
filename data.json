@@ -1,18 +1,5 @@
 [
   {
-    "time": "2026-09-24T04:40:03",
-    "temp": 22.6,
-    "humidity": 54.89,
-    "ambientPressure": 983.1,
-    "gas": 28418,
-    "temp2": 22.1,
-    "humidity2": 55.15,
-    "igPressure": 9.55e-09,
-    "magX": 9.278,
-    "magY": 2.019,
-    "magZ": 26.509
-  },
-  {
     "time": "2026-09-24T04:50:03",
     "temp": 22.6,
     "humidity": 54.83,
@@ -14974,5 +14961,18 @@
     "magX": -6.228,
     "magY": -16.401,
     "magZ": -20.948
+  },
+  {
+    "time": "2026-10-02T05:10:03",
+    "temp": 22.4,
+    "humidity": 55.32,
+    "ambientPressure": 983.2,
+    "gas": 43303,
+    "temp2": 21.8,
+    "humidity2": 55.81,
+    "igPressure": 1.068e-08,
+    "magX": -6.53,
+    "magY": -15.592,
+    "magZ": -20.464
   }
 ]
